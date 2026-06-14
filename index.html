@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Letní škola s Včelkou Béďou</title>
+<style>
+:root{
+  --sky:#e0f7ff;--sky2:#f8fbff;--sun:#fde68a;--card:#ffffff;--ink:#1f2937;--soft:#64748b;
+  --blue:#2563eb;--blue2:#38bdf8;--green:#22c55e;--red:#ef4444;--amber:#f59e0b;--pink:#f9a8d4;
+  --shadow:0 18px 45px rgba(30,41,59,.14);--r:28px;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{font-size:16px}
+body{
+  margin:0;min-height:100vh;color:var(--ink);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:
+    radial-gradient(circle at 14% 7%,#fff4a3 0 72px,transparent 74px),
+    radial-gradient(circle at 92% 10%,#bae6fd 0 85px,transparent 88px),
+    linear-gradient(180deg,#dff7ff 0%,#f8fbff 48%,#fff7ed 100%);
+  overflow-x:hidden;
+}
+body:before{
+  content:"☁️      ☁️        🐝       ☁️";
+  position:fixed;top:16px;left:0;right:0;text-align:center;font-size:34px;opacity:.42;pointer-events:none;z-index:0;
+}
+header,main{position:relative;z-index:1}
+header{max-width:1180px;margin:auto;padding:18px 14px 8px}
+.hero{
+  background:linear-gradient(135deg,#ffffffee,#dff6ffee);border:1px solid rgba(37,99,235,.14);
+  border-radius:34px;box-shadow:var(--shadow);padding:18px;display:grid;gap:14px;
+}
+.heroTop{display:flex;align-items:center;gap:14px}
+.mascot{
+  width:84px;height:84px;border-radius:28px;background:linear-gradient(135deg,#fde68a,#facc15);
+  display:grid;place-items:center;font-size:48px;box-shadow:0 12px 25px rgba(245,158,11,.25);flex:0 0 auto;
+}
+h1{margin:0;font-size:clamp(28px,7vw,50px);line-height:1.02}
+.sub{margin:6px 0 0;color:var(--soft);font-size:16px;line-height:1.35}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.stat{background:white;border:1px solid #e2e8f0;border-radius:22px;padding:12px 6px;text-align:center}
+.stat b{display:block;font-size:24px}
+.stat span{font-size:11px;color:var(--soft);font-weight:800}
+main{max-width:1180px;margin:auto;padding:8px 14px 44px}
+.tabs{
+  display:flex;gap:10px;overflow-x:auto;padding:8px 0 16px;position:sticky;top:0;z-index:5;
+  background:linear-gradient(180deg,#e8f8ff 76%,transparent);scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+button{
+  border:0;border-radius:20px;padding:13px 16px;font-size:16px;font-weight:900;color:var(--ink);background:#fff;
+  box-shadow:0 8px 18px rgba(30,41,59,.10);cursor:pointer;min-height:48px;touch-action:manipulation;
+}
+.tabs button{white-space:nowrap}
+button.active,.primary{color:white;background:linear-gradient(135deg,var(--blue),var(--blue2))}
+.good{background:linear-gradient(135deg,#16a34a,#86efac)!important;color:white}
+.bad{background:linear-gradient(135deg,#dc2626,#fb7185)!important;color:white}
+.warn{background:linear-gradient(135deg,#f59e0b,#fcd34d)!important;color:white}
+.tab{display:none}.tab.show{display:block}
+.grid{display:grid;grid-template-columns:1fr;gap:16px}
+.card{
+  background:rgba(255,255,255,.95);border:1px solid rgba(148,163,184,.22);border-radius:var(--r);
+  box-shadow:var(--shadow);padding:18px;overflow:hidden;
+}
+.card h2{margin:0 0 6px;font-size:25px}.card p{margin:0 0 14px;color:var(--soft);line-height:1.4}
+.exercise{
+  background:linear-gradient(135deg,#eff6ff,#ffffff);border:2px dashed #93c5fd;border-radius:28px;padding:18px;
+  min-height:275px;display:flex;flex-direction:column;justify-content:center;gap:14px;text-align:center;
+}
+.pill{display:inline-flex;justify-content:center;align-self:center;padding:7px 12px;border-radius:999px;background:#dbeafe;color:#1d4ed8;font-weight:900;font-size:13px}
+.question{font-size:clamp(30px,8vw,58px);font-weight:1000;line-height:1.12;word-break:break-word}
+.smallQuestion{font-size:clamp(22px,6vw,38px);font-weight:1000;line-height:1.18}
+.choices{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.choices button{min-height:68px;font-size:20px;line-height:1.15}
+input,select,textarea{
+  width:100%;border:2px solid #bfdbfe;border-radius:20px;padding:14px;font-size:16px;outline:none;background:white;color:var(--ink);
+}
+textarea{min-height:105px;resize:vertical;line-height:1.45} input:focus,select:focus,textarea:focus{border-color:var(--blue)}
+.feedback{min-height:28px;font-size:20px;font-weight:1000}.ok{color:#16a34a}.no{color:#dc2626}
+.progressWrap{height:20px;border-radius:999px;background:#e2e8f0;overflow:hidden}.progressBar{height:100%;width:0%;background:linear-gradient(90deg,#22c55e,#bef264);transition:.25s}
+.mission{display:grid;gap:10px;margin-top:14px}.row{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px;border-radius:20px;background:#f8fafc;border:1px solid #e2e8f0}
+.badges{display:grid;grid-template-columns:repeat(auto-fit,minmax(112px,1fr));gap:10px;margin-top:12px}
+.badge{padding:13px 8px;text-align:center;border-radius:22px;background:#f8fafc;border:1px solid #e2e8f0;opacity:.43}
+.badge.unlocked{opacity:1;background:linear-gradient(135deg,#fff7ed,#fef3c7);border-color:#f59e0b55}.badge .icon{font-size:34px}
+.map{display:grid;grid-template-columns:1fr;gap:10px}.area{padding:14px;border-radius:22px;background:#f8fafc;border:2px solid #e2e8f0}.area.open{background:linear-gradient(135deg,#dcfce7,#f0fdf4);border-color:#86efac}
+.area b{display:block;font-size:18px}
+.hiveScene{min-height:230px;border-radius:28px;background:linear-gradient(180deg,#dbeafe,#dcfce7);border:2px solid #bfdbfe;display:flex;align-items:end;justify-content:center;padding:16px;font-size:42px;line-height:1.2;overflow:hidden;text-align:center}
+.resourceGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.resource{background:#fff;border:1px solid #e2e8f0;border-radius:20px;padding:12px 6px;font-weight:900;text-align:center}
+.diaryItem{background:#f8fafc;border:1px solid #e2e8f0;border-radius:18px;padding:12px;margin-top:10px}
+.parentGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}.parentBox{background:#f8fafc;border:1px solid #e2e8f0;border-radius:20px;padding:14px;text-align:center}.parentBox b{font-size:24px}
+@media(min-width:860px){.hero{grid-template-columns:1.35fr 1fr;align-items:center;padding:24px}.grid{grid-template-columns:1.08fr .92fr}.map{grid-template-columns:1fr 1fr}}
+@media(max-width:430px){
+  header,main{padding-left:10px;padding-right:10px}.hero{border-radius:28px}.mascot{width:68px;height:68px;font-size:40px;border-radius:24px}
+  .stats{grid-template-columns:repeat(2,1fr)}.card{padding:14px;border-radius:24px}.choices{grid-template-columns:1fr}.choices button{min-height:60px}button{font-size:16px;padding:12px 14px}
+}
+</style>
+</head>
+<body>
+<header>
+  <section class="hero">
+    <div class="heroTop">
+      <div class="mascot">🐝</div>
+      <div>
+        <h1 id="title">Letní škola s Včelkou Béďou</h1>
+        <p class="sub">Učení jako hra na celé prázdniny: matematika, čtení, angličtina, vlastivěda a budování včelnice.</p>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><b id="points">0</b><span>bodů</span></div>
+      <div class="stat"><b id="streak">0</b><span>správně v řadě</span></div>
+      <div class="stat"><b id="today">0</b><span>dnes splněno</span></div>
+      <div class="stat"><b id="level">1</b><span>úroveň</span></div>
+    </div>
+  </section>
+</header>
+<main>
+<nav class="tabs">
+  <button class="active" data-tab="home">🏠 Přehled</button>
+  <button data-tab="math">➕ Matematika</button>
+  <button data-tab="read">📖 Čtení</button>
+  <button data-tab="eng">🇬🇧 Angličtina</button>
+  <button data-tab="world">🌍 Vlastivěda</button>
+  <button data-tab="bee">🐝 Včelnice</button>
+  <button data-tab="parent">👨‍👩‍👦 Rodič</button>
+  <button data-tab="settings">⚙️ Nastavení</button>
+</nav>
+
+<section id="home" class="tab show">
+  <div class="grid">
+    <div class="card">
+      <h2>Dnešní mise</h2>
+      <p>Béďa potřebuje pomoc. Splň krátké úkoly a získáš nektar, pyl, vosk a nové části včelnice.</p>
+      <div class="progressWrap"><div class="progressBar" id="bar"></div></div>
+      <p style="margin-top:10px"><b id="goalText">0 / 15 úkolů</b></p>
+      <div class="mission">
+        <div class="row"><span>➕ 5 příkladů</span><button onclick="openTab('math')">Začít</button></div>
+        <div class="row"><span>📖 5 čtení</span><button onclick="openTab('read')">Začít</button></div>
+        <div class="row"><span>🇬🇧 5 slovíček</span><button onclick="openTab('eng')">Začít</button></div>
+        <div class="row"><span>🌍 5 otázek</span><button onclick="openTab('world')">Začít</button></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Mapa dobrodružství</h2>
+      <p>Oblasti se odemykají podle bodů.</p>
+      <div class="map" id="map"></div>
+    </div>
+  </div>
+</section>
+
+<section id="math" class="tab">
+  <div class="grid">
+    <div class="card">
+      <h2>Matematika</h2>
+      <p>Příklady, porovnávání, číselná řada a správně napsané české slovní úlohy.</p>
+      <div class="exercise">
+        <div class="pill" id="mathType">Příklad</div>
+        <div class="smallQuestion" id="mathQ"></div>
+        <div class="choices" id="mathA"></div>
+        <div class="feedback" id="mathF"></div>
+        <button class="primary" onclick="newMath()">Další úkol</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Nastavení počítání</h2>
+      <p>Pro konec 1. třídy je nejlepší počítání do 20.</p>
+      <label>Počítat do</label>
+      <select id="maxNumber" onchange="saveSettings();newMath()">
+        <option value="10">10</option><option value="20" selected>20</option><option value="30">30</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<section id="read" class="tab">
+  <div class="grid">
+    <div class="card">
+      <h2>Čtení</h2>
+      <p>Dítě čte nahlas slova, věty a krátké příběhy. Rodič označí výsledek.</p>
+      <div class="exercise">
+        <div class="pill" id="readType">Slovo</div>
+        <div class="smallQuestion" id="readQ"></div>
+        <div class="choices">
+          <button class="good" onclick="manual(true,'readF',newRead,'read')">Přečteno správně</button>
+          <button class="bad" onclick="manual(false,'readF',newRead,'read')">Ještě procvičit</button>
+        </div>
+        <div class="feedback" id="readF"></div>
+        <button class="primary" onclick="newRead()">Další čtení</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Příběh s otázkou</h2>
+      <p>Krátký text a jednoduchá otázka k porozumění.</p>
+      <div class="exercise">
+        <div class="smallQuestion" id="storyText"></div>
+        <div class="pill" id="storyQ"></div>
+        <div class="choices" id="storyA"></div>
+        <div class="feedback" id="storyF"></div>
+        <button onclick="newStory()">Další příběh</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="eng" class="tab">
+  <div class="grid">
+    <div class="card">
+      <h2>Angličtina</h2>
+      <p>Zvířata, barvy, čísla, rodina, příroda a věci kolem dítěte.</p>
+      <div class="exercise">
+        <div class="pill" id="engType">Slovíčko</div>
+        <div class="question" id="engQ"></div>
+        <div class="choices" id="engA"></div>
+        <div class="feedback" id="engF"></div>
+        <button class="primary" onclick="newEng()">Další slovíčko</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Výslovnost</h2>
+      <p>Tlačítko zkusí přečíst anglické slovíčko nahlas podle podpory prohlížeče.</p>
+      <button class="warn" onclick="speakCurrentEnglish()">🔊 Přečíst slovíčko</button>
+      <br><br>
+      <h2>Režim</h2>
+      <select id="engMode" onchange="newEng()">
+        <option value="en-cz">Anglicky → česky</option>
+        <option value="cz-en">Česky → anglicky</option>
+      </select>
+    </div>
+  </div>
+</section>
+
+<section id="world" class="tab">
+  <div class="grid">
+    <div class="card">
+      <h2>Vlastivěda / prvouka</h2>
+      <p>Česká republika, příroda, roční období, bezpečnost, zvířata a dny v týdnu.</p>
+      <div class="exercise">
+        <div class="pill" id="worldType">Otázka</div>
+        <div class="smallQuestion" id="worldQ"></div>
+        <div class="choices" id="worldA"></div>
+        <div class="feedback" id="worldF"></div>
+        <button class="primary" onclick="newWorld()">Další otázka</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Letní deník</h2>
+      <p>Jedna krátká věta denně. Ukládá se jen v zařízení.</p>
+      <textarea id="diaryText" placeholder="Dnes jsem..."></textarea>
+      <button class="primary" onclick="saveDiary()">Uložit zápis</button>
+      <div id="diaryList"></div>
+    </div>
+  </div>
+</section>
+
+<section id="bee" class="tab">
+  <div class="grid">
+    <div class="card">
+      <h2>Včelnice</h2>
+      <p>Za úkoly získáváš suroviny a Béďovi roste včelnice.</p>
+      <div class="hiveScene" id="hiveScene"></div>
+      <br>
+      <div class="resourceGrid">
+        <div class="resource">🍯 <span id="nectar">0</span><br><small>nektar</small></div>
+        <div class="resource">🌾 <span id="pollen">0</span><br><small>pyl</small></div>
+        <div class="resource">🧱 <span id="wax">0</span><br><small>vosk</small></div>
+        <div class="resource">🐝 <span id="bees">1</span><br><small>včely</small></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Odměny</h2>
+      <div class="badges" id="badges"></div>
+    </div>
+  </div>
+</section>
+
+<section id="parent" class="tab">
+  <div class="card">
+    <h2>Rodičovský přehled</h2>
+    <p>Přehled aktivity a silných/slabších oblastí.</p>
+    <div class="parentGrid">
+      <div class="parentBox"><b id="sMath">0</b><br>matematika</div>
+      <div class="parentBox"><b id="sRead">0</b><br>čtení</div>
+      <div class="parentBox"><b id="sEng">0</b><br>angličtina</div>
+      <div class="parentBox"><b id="sWorld">0</b><br>vlastivěda</div>
+      <div class="parentBox"><b id="mistakes">0</b><br>chyby</div>
+      <div class="parentBox"><b id="days">1</b><br>dní použití</div>
+    </div>
+  </div>
+</section>
+
+<section id="settings" class="tab">
+  <div class="card">
+    <h2>Nastavení a záloha</h2>
+    <p>Data se ukládají offline v prohlížeči. Export použij před nahráním nové verze.</p>
+    <label>Jméno dítěte</label>
+    <input id="childName" placeholder="např. Tomík" onchange="saveSettings()">
+    <br><br>
+    <label>Denní cíl</label>
+    <select id="dailyGoal" onchange="saveSettings();render()">
+      <option value="10">10 úkolů</option><option value="15" selected>15 úkolů</option><option value="20">20 úkolů</option><option value="30">30 úkolů</option>
+    </select>
+    <br><br>
+    <button onclick="exportData()">Exportovat .json</button>
+    <label><input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)"><button onclick="document.getElementById('importFile').click()">Importovat .json</button></label>
+    <button class="bad" onclick="resetData()">Smazat postup</button>
+  </div>
+</section>
+</main>
+
+<script>
+const STORE='letniSkolaBedou_v4';
+const todayKey=()=>{const d=new Date();return `${d.getFullYear()}-${d.getMonth()+1}-${d.getDate()}`};
+let state={
+  points:0,streak:0,today:0,lastDate:todayKey(),firstDate:todayKey(),mistakes:0,
+  stats:{math:0,read:0,eng:0,world:0},
+  settings:{childName:'',dailyGoal:15,maxNumber:20},
+  diary:[]
+};
+
+const readingWords=['máma','táta','škola','léto','včela','slunce','kočka','pes','kolo','voda','strom','louka','květina','med','auto','kamarád','ryba','sova','mrak','most','les','dům','ruka','noha','oko','zub'];
+const readingSentences=['Máma má kolo.','Pes běží po louce.','Včela letí na květ.','Tom má modrý míč.','Děti jdou na výlet.','V létě svítí slunce.','Kočka spí u domu.','Na louce roste květina.','Táta čte knihu.','Ema pije vodu.'];
+const stories=[
+ {text:'Béďa letěl na louku. Našel tam tři žluté květy.',q:'Co Béďa našel?',a:'žluté květy',c:['žluté květy','modré auto','velký dům','červený míč']},
+ {text:'Tom šel s mámou do lesa. Viděl veverku na stromě.',q:'Koho Tom viděl?',a:'veverku',c:['veverku','rybu','včelu','kočku']},
+ {text:'Ema má novou knihu. Čte si každý večer.',q:'Co má Ema?',a:'knihu',c:['knihu','kolo','míč','med']},
+ {text:'Na zahradě stojí úl. Včelky z něj létají na květy.',q:'Kam létají včelky?',a:'na květy',c:['na květy','do školy','do auta','na sníh']}
+];
+const eng=[
+ {en:'Bee',cz:'Včela',type:'Zvíře'},{en:'Dog',cz:'Pes',type:'Zvíře'},{en:'Cat',cz:'Kočka',type:'Zvíře'},{en:'Bird',cz:'Pták',type:'Zvíře'},
+ {en:'Sun',cz:'Slunce',type:'Příroda'},{en:'Water',cz:'Voda',type:'Příroda'},{en:'Tree',cz:'Strom',type:'Příroda'},{en:'Flower',cz:'Květina',type:'Příroda'},
+ {en:'House',cz:'Dům',type:'Věc'},{en:'Car',cz:'Auto',type:'Věc'},{en:'Book',cz:'Kniha',type:'Věc'},{en:'Ball',cz:'Míč',type:'Věc'},
+ {en:'Red',cz:'Červená',type:'Barva'},{en:'Blue',cz:'Modrá',type:'Barva'},{en:'Green',cz:'Zelená',type:'Barva'},{en:'Yellow',cz:'Žlutá',type:'Barva'},
+ {en:'One',cz:'Jedna',type:'Číslo'},{en:'Two',cz:'Dvě',type:'Číslo'},{en:'Three',cz:'Tři',type:'Číslo'},{en:'Four',cz:'Čtyři',type:'Číslo'},{en:'Five',cz:'Pět',type:'Číslo'},
+ {en:'Mum',cz:'Máma',type:'Rodina'},{en:'Dad',cz:'Táta',type:'Rodina'},{en:'Boy',cz:'Kluk',type:'Rodina'},{en:'Girl',cz:'Holka',type:'Rodina'}
+];
+const world=[
+ {q:'Jaké je hlavní město České republiky?',a:'Praha',c:['Praha','Brno','Liberec','Ostrava'],t:'Česká republika'},
+ {q:'Kolik má rok ročních období?',a:'4',c:['2','3','4','5'],t:'Roční období'},
+ {q:'Co musíš udělat před přechodem silnice?',a:'Rozhlédnout se',c:['Rozhlédnout se','Běžet','Zavřít oči','Hrát si'],t:'Bezpečnost'},
+ {q:'Které zvíře dává med?',a:'Včela',c:['Kráva','Pes','Včela','Kočka'],t:'Příroda'},
+ {q:'Co patří k létu?',a:'Slunce',c:['Sníh','Slunce','Mráz','Vánoce'],t:'Léto'},
+ {q:'Jaké barvy má česká vlajka?',a:'Bílá, červená a modrá',c:['Bílá, červená a modrá','Zelená a žlutá','Černá a bílá','Jen červená'],t:'Česká republika'},
+ {q:'Kde žijí ryby?',a:'Ve vodě',c:['Ve vodě','Na stromě','V autě','V botě'],t:'Zvířata'},
+ {q:'Co roste v lese?',a:'Stromy',c:['Stromy','Talíře','Boty','Knihy'],t:'Příroda'},
+ {q:'Který den bývá po pondělí?',a:'Úterý',c:['Úterý','Neděle','Pátek','Sobota'],t:'Dny v týdnu'},
+ {q:'Co ukazuje červená na semaforu?',a:'Stůj',c:['Stůj','Běž','Spi','Tancuj'],t:'Bezpečnost'},
+ {q:'Kdy obvykle padá sníh?',a:'V zimě',c:['V zimě','V létě','V červenci','Na jaře'],t:'Roční období'},
+ {q:'Které zvíře snáší vejce?',a:'Slepice',c:['Slepice','Pes','Kočka','Kráva'],t:'Zvířata'}
+];
+
+let currentEnglish='Bee';
+
+function load(){
+  try{const s=JSON.parse(localStorage.getItem(STORE));if(s)state={...state,...s,settings:{...state.settings,...(s.settings||{})},stats:{...state.stats,...(s.stats||{})}}}catch(e){}
+  if(state.lastDate!==todayKey()){state.today=0;state.streak=0;state.lastDate=todayKey();save()}
+  childName.value=state.settings.childName||'';dailyGoal.value=state.settings.dailyGoal||15;maxNumber.value=state.settings.maxNumber||20;
+}
+function save(){localStorage.setItem(STORE,JSON.stringify(state))}
+function saveSettings(){state.settings.childName=childName.value;state.settings.dailyGoal=Number(dailyGoal.value);state.settings.maxNumber=Number(maxNumber.value);save();render()}
+function pick(a){return a[Math.floor(Math.random()*a.length)]} function shuffle(a){return [...a].sort(()=>Math.random()-.5)}
+function safe(s){return String(s).replace(/'/g,"\\'")}
+function itemWord(n,one,few,many){if(n===1)return one;if(n>=2&&n<=4)return few;return many}
+function openTab(id){document.querySelectorAll('.tab').forEach(t=>t.classList.remove('show'));document.getElementById(id).classList.add('show');document.querySelectorAll('.tabs button').forEach(b=>b.classList.toggle('active',b.dataset.tab===id))}
+document.querySelectorAll('.tabs button').forEach(b=>b.onclick=()=>openTab(b.dataset.tab));
+
+function render(){
+  points.textContent=state.points;streak.textContent=state.streak;today.textContent=state.today;level.textContent=1+Math.floor(state.points/100);
+  title.textContent=state.settings.childName?`Letní škola pro ${state.settings.childName}`:'Letní škola s Včelkou Béďou';
+  const goal=state.settings.dailyGoal||15;bar.style.width=Math.min(100,Math.round(state.today/goal*100))+'%';goalText.textContent=`${state.today} / ${goal} úkolů`;
+  renderMap();renderHive();renderBadges();renderParent();renderDiary();
+}
+function reward(subject){
+  state.points+=5;state.streak++;state.today++;if(state.streak%5===0)state.points+=10;
+  if(subject&&state.stats[subject]!=null)state.stats[subject]++;save();render();
+}
+function fail(){state.streak=0;state.mistakes++;save();render()}
+function manual(ok,id,next,subject){
+  const el=document.getElementById(id);
+  if(ok){reward(subject);el.textContent='Výborně! +5 bodů';el.className='feedback ok';setTimeout(next,750)}
+  else{fail();el.textContent='Nevadí, zkusíme to znovu.';el.className='feedback no'}
+}
+
+function wordProblem(){
+  const templates=[
+    ()=>{let a=rand(1,9),b=rand(1,9);return {q:`V úlu je ${a} ${itemWord(a,'včelka','včelky','včelek')} a přiletí ${b} ${itemWord(b,'včelka','včelky','včelek')}. Kolik včelek je v úlu?`,a:a+b}},
+    ()=>{let a=rand(1,9),b=rand(1,9);return {q:`Tom má ${a} ${itemWord(a,'jablko','jablka','jablek')} a dostane ${b} ${itemWord(b,'jablko','jablka','jablek')}. Kolik jablek má dohromady?`,a:a+b}},
+    ()=>{let a=rand(1,9),b=rand(1,9);return {q:`Ema má ${a} ${itemWord(a,'pastelku','pastelky','pastelek')} a koupí si ${b} ${itemWord(b,'pastelku','pastelky','pastelek')}. Kolik pastelek bude mít?`,a:a+b}},
+    ()=>{let a=rand(5,15),b=rand(1,Math.min(9,a));return {q:`Na louce rostlo ${a} ${itemWord(a,'květina','květiny','květin')}. Béďa navštívil ${b} ${itemWord(b,'květinu','květiny','květin')}. Kolik květin mu ještě zbývá?`,a:a-b}},
+    ()=>{let a=rand(5,15),b=rand(1,Math.min(9,a));return {q:`Na stromě sedělo ${a} ${itemWord(a,'ptáček','ptáčci','ptáčků')}. ${b} ${itemWord(b,'ptáček','ptáčci','ptáčků')} odletělo. Kolik ptáčků zůstalo?`,a:a-b}}
+  ];
+  return pick(templates)();
+}
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min}
+function newMath(){
+  const max=Number(maxNumber.value||20); const type=pick(['plus','minus','compare','series','word']); let q,a,label,opts;
+  if(type==='plus'){let x=rand(0,max),y=rand(0,max-x);q=`${x} + ${y} = ?`;a=x+y;label='Sčítání'}
+  else if(type==='minus'){let x=rand(0,max),y=rand(0,x);q=`${x} − ${y} = ?`;a=x-y;label='Odčítání'}
+  else if(type==='compare'){let x=rand(0,max),y=rand(0,max);q=`Které znaménko patří mezi čísla? ${x} ? ${y}`;a=x>y?'>':x<y?'<':'=';label='Větší / menší';opts=['>','<','=']}
+  else if(type==='series'){let start=rand(0,10),step=pick([1,2]);q=`Doplň řadu: ${start}, ${start+step}, ${start+2*step}, ?`;a=start+3*step;label='Číselná řada'}
+  else{const w=wordProblem();q=w.q;a=w.a;label='Slovní úloha'}
+  mathType.textContent=label;mathQ.textContent=q;
+  if(!opts){const set=new Set([a]);while(set.size<4)set.add(Math.max(0,a+rand(-4,4)));opts=[...set]}
+  mathA.innerHTML=shuffle(opts).map(o=>`<button onclick="checkAny('${safe(o)}','${safe(a)}','mathF',newMath,'math')">${o}</button>`).join('');
+  mathF.textContent='';
+}
+function checkAny(x,a,id,next,subject){manual(String(x)===String(a),id,next,subject)}
+
+function newRead(){
+  const mode=pick(['word','sentence']); const item=mode==='word'?pick(readingWords):pick(readingSentences);
+  readType.textContent=mode==='word'?'Slovo':'Věta';readQ.textContent=item;readF.textContent='';
+}
+function newStory(){
+  const s=pick(stories);storyText.textContent=s.text;storyQ.textContent=s.q;
+  storyA.innerHTML=shuffle(s.c).map(o=>`<button onclick="checkAny('${safe(o)}','${safe(s.a)}','storyF',newStory,'read')">${o}</button>`).join('');
+  storyF.textContent='';
+}
+function newEng(){
+  const q=pick(eng); currentEnglish=q.en; engType.textContent=q.type;
+  const mode=engMode.value||'en-cz'; const correct=mode==='en-cz'?q.cz:q.en; engQ.textContent=mode==='en-cz'?q.en:q.cz;
+  const set=new Set([correct]); while(set.size<4){const x=pick(eng);set.add(mode==='en-cz'?x.cz:x.en)}
+  engA.innerHTML=shuffle([...set]).map(o=>`<button onclick="checkAny('${safe(o)}','${safe(correct)}','engF',newEng,'eng')">${o}</button>`).join('');
+  engF.textContent='';
+}
+function speakCurrentEnglish(){
+  if(!('speechSynthesis' in window))return alert('Výslovnost není v tomto prohlížeči dostupná.');
+  const u=new SpeechSynthesisUtterance(currentEnglish);u.lang='en-GB';u.rate=.82;speechSynthesis.speak(u);
+}
+function newWorld(){
+  const q=pick(world);worldType.textContent=q.t;worldQ.textContent=q.q;
+  worldA.innerHTML=shuffle(q.c).map(o=>`<button onclick="checkAny('${safe(o)}','${safe(q.a)}','worldF',newWorld,'world')">${o}</button>`).join('');
+  worldF.textContent='';
+}
+function renderMap(){
+  const areas=[[0,'🟢 Louka začátečníků','První jednoduché úkoly'],[100,'🌼 Květinové pole','Více angličtiny a čtení'],[250,'🌳 Lesní mýtina','Těžší slovní úlohy'],[500,'🍎 Ovocný sad','Delší čtení'],[900,'🏡 Velká včelnice','Mistrovská oblast']];
+  map.innerHTML=areas.map(a=>`<div class="area ${state.points>=a[0]?'open':''}"><b>${a[1]}</b><small>${state.points>=a[0]?'Odemčeno':'Odemkne se za '+a[0]+' bodů'}</small><p>${a[2]}</p></div>`).join('');
+}
+function renderHive(){
+  const nectarAmt=state.points,pollenAmt=Math.floor(state.stats.world*2+state.stats.read),waxAmt=Math.floor(state.points/20),beesCount=1+Math.floor(state.points/50),flowers=Math.floor(state.points/10),combs=Math.floor(state.points/75),hives=1+Math.floor(state.points/500);
+  nectar.textContent=nectarAmt;pollen.textContent=pollenAmt;wax.textContent=waxAmt;bees.textContent=beesCount;
+  hiveScene.innerHTML=`<div>${'☁️'.repeat(2)}<br>${'🐝'.repeat(Math.min(beesCount,10))}<br>${'🌼'.repeat(Math.min(flowers,14))}<br>${'🍯'.repeat(Math.max(1,Math.min(combs+1,8)))}<br>${'🏠'.repeat(Math.min(hives,3))}</div>`;
+}
+function renderBadges(){
+  const data=[[25,'🌱','První kroky'],[75,'⭐','Šikula'],[150,'🐝','Malá včelka'],[300,'🏆','Letní mistr'],[500,'👑','Král úlu'],[1000,'🏡','Velký včelař']];
+  badges.innerHTML=data.map(b=>`<div class="badge ${state.points>=b[0]?'unlocked':''}"><div class="icon">${b[1]}</div><b>${b[2]}</b><br><small>${b[0]} bodů</small></div>`).join('');
+}
+function renderParent(){
+  sMath.textContent=state.stats.math;sRead.textContent=state.stats.read;sEng.textContent=state.stats.eng;sWorld.textContent=state.stats.world;mistakes.textContent=state.mistakes;
+  const start=new Date(state.firstDate),now=new Date();days.textContent=Math.max(1,Math.ceil((now-start)/86400000));
+}
+function saveDiary(){
+  const text=diaryText.value.trim(); if(!text)return;
+  state.diary.unshift({date:new Date().toLocaleDateString('cs-CZ'),text});diaryText.value='';reward('read');
+}
+function renderDiary(){diaryList.innerHTML=state.diary.slice(0,12).map(d=>`<div class="diaryItem"><b>${d.date}</b><br>${d.text}</div>`).join('')}
+function exportData(){const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='letni-skola-bedou-zaloha.json';a.click();URL.revokeObjectURL(a.href)}
+function importData(e){
+  const file=e.target.files[0];if(!file)return;const r=new FileReader();
+  r.onload=()=>{try{const d=JSON.parse(r.result);state={...state,...d,settings:{...state.settings,...(d.settings||{})},stats:{...state.stats,...(d.stats||{})}};save();load();render();alert('Záloha načtena.')}catch(err){alert('Záloha nejde načíst.')}}
+  r.readAsText(file);
+}
+function resetData(){if(confirm('Opravdu smazat postup?')){localStorage.removeItem(STORE);location.reload()}}
+
+load();render();newMath();newRead();newStory();newEng();newWorld();
+</script>
+</body>
+</html>
